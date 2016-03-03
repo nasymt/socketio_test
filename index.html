@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<title>Socket.ioの練習</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<script src="http://localhost:1337/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			var socket = io.connect("http://localhost:1337");
+			// emit : イベントを発信している
+			// on：イベントを待ち受けている
+			$('#myForm').submit(function(e){
+				e.preventDefault();
+//				socket.emit('emit_from_client', $('#msg').val());
+				socket.json.emit('emit_from_client', {
+					msg: $('#msg').val(),
+					room: $('#rooms').val()
+				});
+			});
+			socket.on('emit_from_server',function(data){
+				$('#logs').append($('<li>').text(data));
+			});
+		});
+	</script>
+</head>
+<body>
+	<form id="myForm">
+		<select id="rooms">
+			<option value="room-1">Room 1</option>
+			<option value="room-2">Room 2</option>
+		</select>
+		<input type="text" id="msg"><input type="submit" value="Send!">
+	</form>
+	<ul id="logs"></ul>
+
+
+</body>
+</html>
